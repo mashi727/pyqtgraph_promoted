@@ -19,6 +19,8 @@ from PySide6.QtWidgets import (QApplication, QGridLayout, QHBoxLayout, QMainWind
     QMenuBar, QPushButton, QSizePolicy, QSpacerItem,
     QStatusBar, QWidget)
 
+from pyqtgraph import GraphicsLayoutWidget
+
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
@@ -28,7 +30,7 @@ class Ui_MainWindow(object):
         self.centralwidget.setObjectName(u"centralwidget")
         self.gridLayout = QGridLayout(self.centralwidget)
         self.gridLayout.setObjectName(u"gridLayout")
-        self.widget = QWidget(self.centralwidget)
+        self.widget = GraphicsLayoutWidget(self.centralwidget)
         self.widget.setObjectName(u"widget")
         sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
