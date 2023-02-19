@@ -76,8 +76,42 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.area.addDock(d5, 'right', d1)  ## place d5 at left edge of d1
         self.gridLayout.addWidget(self.area, 3, 0, 1, 1)
     
+        ## Create random 3D data set with time varying signals
+        dataRed = np.ones((100, 200, 200)) * np.linspace(90, 150, 100)[:, np.newaxis, np.newaxis]
+        dataRed += pg.gaussianFilter(np.random.normal(size=(200, 200)), (5, 5)) * 100
+        dataGrn = np.ones((100, 200, 200)) * np.linspace(90, 180, 100)[:, np.newaxis, np.newaxis]
+        dataGrn += pg.gaussianFilter(np.random.normal(size=(200, 200)), (5, 5)) * 100
+        dataBlu = np.ones((100, 200, 200)) * np.linspace(180, 90, 100)[:, np.newaxis, np.newaxis]
+        dataBlu += pg.gaussianFilter(np.random.normal(size=(200, 200)), (5, 5)) * 100
+
+        data = np.concatenate(
+            (dataRed[:, :, :, np.newaxis], dataGrn[:, :, :, np.newaxis], dataBlu[:, :, :, np.newaxis]), axis=3
+        )
+    
+        imv = pg.ImageView(discreteTimeLine=True)
+        imv.setImage(data, xvals=np.linspace(1., 3., data.shape[0]))
+        imv.play(10)
+
+        ## Set a custom color map
+        colors = [
+            (0, 0, 0),
+            (45, 5, 61),
+            (84, 42, 55),
+            (150, 87, 60),
+            (208, 171, 141),
+            (255, 255, 255)
+        ]
+        cmap = pg.ColorMap(pos=np.linspace(0.0, 1.0, 6), color=colors)
+        imv.setColorMap(cmap)
+
+        # Start up with an ROI
+        imv.ui.roiBtn.setChecked(True)
+        imv.roiClicked()
+        
+        self.gridLayout.addWidget(imv, 0, 1, 4, 1)
     
         self.plot_xy()
+
 
     def plot_xy(self):
         p1 = self.widget.addPlot(title="Basic array plotting", y=np.random.normal(size=100))
