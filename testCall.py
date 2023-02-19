@@ -16,6 +16,15 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.setupUi(self)
+        self.plot_xy()
+
+    def plot_xy(self):
+        p1 = self.widget.addPlot(title="Basic array plotting", y=np.random.normal(size=100))
+        self.widget.nextRow()
+        p2 = self.widget.addPlot(title="Multiple curves")
+        p2.plot(np.random.normal(size=100), pen=(255,0,0), name="Red curve")
+        p2.plot(np.random.normal(size=110)+5, pen=(0,255,0), name="Green curve")
+        p2.plot(np.random.normal(size=120)+10, pen=(0,0,255), name="Blue curve")
         
 def main():
     app = QApplication(sys.argv)
