@@ -61,12 +61,21 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
 
         self.area = DockArea()
-        d1 = Dock("Dock1")
-        self.area.addDock(d1, 'left')      ## place d1 at left edge of dock area (it will fill the whole space since there are no other docks yet)
+        d1 = Dock("Dock1", size=(100,200))
+        d5 = Dock("Dock5 - Image", size=(100,200))
+
         w4 = pg.PlotWidget(title="Dock 4 plot")
         w4.plot(np.random.normal(size=100))
+        w5 = pg.ImageView()
+        w5.setImage(np.random.normal(size=(100,100)))
+
         d1.addWidget(w4)
+        d5.addWidget(w5)
+        
+        self.area.addDock(d1, 'left')      ## place d1 at left edge of dock area (it will fill the whole space since there are no other docks yet)
+        self.area.addDock(d5, 'right', d1)  ## place d5 at left edge of d1
         self.gridLayout.addWidget(self.area, 3, 0, 1, 1)
+    
     
         self.plot_xy()
 
