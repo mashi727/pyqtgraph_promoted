@@ -3,7 +3,9 @@ from PySide6 import QtWidgets, QtCore
 from PySide6.QtWidgets import QApplication, QSizePolicy
 import os
 
-from PySide6.QtWidgets import QVBoxLayout, QHBoxLayout
+from pyqtgraph.dockarea.Dock import Dock
+from pyqtgraph.dockarea.DockArea import DockArea
+
 from PySide6.QtWebEngineWidgets import QWebEngineView
 # Key Event
 from PySide6.QtCore import Qt
@@ -23,9 +25,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.setupUi(self)
-
         self.widget = GraphicsLayoutWidget(self.centralwidget)
-
 
         # 中心座標 日本緯度経度原点
         center = [35.6580992222, 139.7413574722]
@@ -33,7 +33,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         # 地図作成
         m = folium.Map(
             location=center,
-            zoom_start=17,
+            zoom_start=18,
             tiles='https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', # 通常
             #tiles='https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png', # 淡色
             #tiles='https://cyberjapandata.gsi.go.jp/xyz/ort/{z}/{x}/{y}.jpg', # 航空写真
@@ -53,12 +53,21 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.mapview.setHtml(data.getvalue().decode())
 
         # Location of Graph
+        # addWidget row: int, column: int, rowSpan: int, columnSpan: int
         self.gridLayout.addWidget(self.widget, 0, 0, 1, 1)
         # Location of Map
         self.gridLayout.addWidget(self.mapview, 2, 0, 1, 1)
-        self.setGeometry(50, 50, 1200, 960) # WQXGA (Wide-QXGA)
+        self.setGeometry(50, 50, 1200, 1280) # WQXGA (Wide-QXGA)
 
-        
+
+        self.area = DockArea()
+        d1 = Dock("Dock1")
+        self.area.addDock(d1, 'left')      ## place d1 at left edge of dock area (it will fill the whole space since there are no other docks yet)
+        w4 = pg.PlotWidget(title="Dock 4 plot")
+        w4.plot(np.random.normal(size=100))
+        d1.addWidget(w4)
+        self.gridLayout.addWidget(self.area, 3, 0, 1, 1)
+    
         self.plot_xy()
 
     def plot_xy(self):
