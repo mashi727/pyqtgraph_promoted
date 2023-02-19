@@ -1,21 +1,27 @@
 import sys
 from PySide6 import QtWidgets, QtCore
-from PySide6.QtWidgets import QApplication
+from PySide6.QtWidgets import QApplication, QSizePolicy
 import os
-
 
 # Key Event
 from PySide6.QtCore import Qt
 import pyqtgraph as pg
+from pyqtgraph import GraphicsLayoutWidget
+
 
 import numpy as np
 
-from testui import Ui_MainWindow
+from testui_nopro import Ui_MainWindow
 
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.setupUi(self)
+
+        self.widget = GraphicsLayoutWidget(self.centralwidget)
+        self.gridLayout.addWidget(self.widget, 0, 0, 1, 1)
+
+
         self.plot_xy()
 
     def plot_xy(self):
